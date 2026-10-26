@@ -1,8 +1,8 @@
-# Simulateur FPV
+# FPV Racer
 
 Simulateur de drone FPV 3D dans le navigateur : acro, rates Betaflight, propwash, tunnels, bando, course et suivi de voitures en drift.
 
-**▶ Démo en ligne : [https://yoannservices.github.io/simulateur-fpv/](https://yoannservices.github.io/simulateur-fpv/)**
+**▶ Démo en ligne : [https://yoannservices.github.io/fpv-racer/](https://yoannservices.github.io/fpv-racer/)**
 
 ## Fonctionnalités
 
@@ -36,7 +36,7 @@ Aucune installation : ouvrez `index.html` dans un navigateur, ou servez le dossi
 python -m http.server 8000
 ```
 
-puis allez sur http://localhost:8000 (dans le dossier `web/` de Mes Projets : http://localhost:8000/loisirs/simulateur-fpv/).
+puis allez sur http://localhost:8000 (dans le dossier `web/` de Mes Projets : http://localhost:8000/loisirs/fpv-racer/).
 
 ## Structure
 
@@ -55,4 +55,4 @@ HTML, CSS et JavaScript ; rendu 3D avec [Three.js](https://threejs.org/) r128 (c
 
 ---
 
-Fait partie de [Mes Projets](https://yoannservices.github.io/) · [Portfolio](https://yoannservices.github.io/Y.Portfolio/) · par [@yoannservices](https://github.com/yoannservices)
+Fait partie de [Mes Projets](https://yoannservices.github.io/) · [Portfolio](https://yoannservices.github.io/portfolio/) · par [@yoannservices](https://github.com/yoannservices)
