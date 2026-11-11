@@ -55,7 +55,7 @@
     const lens = new THREE.Mesh(new THREE.CylinderGeometry(0.0075, 0.0075, 0.012, 14).rotateX(Math.PI / 2), M(0x0a1622, { roughness: 0.05, metalness: 0.8 })); lens.position.z = -0.014; cam.add(lens);
     const ant = add(new THREE.CylinderGeometry(0.0012, 0.0012, 0.045, 5), black, 0, 0.05, 0.075); ant.rotation.x = 0.5;
     add(new THREE.BoxGeometry(0.02, 0.004, 0.004), new THREE.MeshBasicMaterial({ color: 0xff2020 }), 0, 0.0, 0.07);
-    const props = [];
+    const props = [], discs = [];
     const propMat = new THREE.MeshBasicMaterial({ color: 0x222222, transparent: true, opacity: 0.3, side: THREE.DoubleSide, depthWrite: false });
     const bladeG = new THREE.BoxGeometry(0.06, 0.0015, 0.011).translate(0.032, 0, 0);
     const bellG = new THREE.CylinderGeometry(0.0145, 0.0125, 0.016, 16), baseG = new THREE.CylinderGeometry(0.011, 0.012, 0.006, 12);
@@ -63,7 +63,7 @@
     [[0.083, -0.083], [-0.083, -0.083], [0.083, 0.083], [-0.083, 0.083]].forEach(([x, z], i) => {
       add(baseG, black, x, -0.009, z); add(bellG, M(motor[i], { roughness: 0.25, metalness: 0.9 }), x, 0.002, z);
       add(new THREE.CylinderGeometry(0.003, 0.003, 0.006, 8), alu, x, 0.013, z);
-      const disc = new THREE.Mesh(new THREE.CircleGeometry(0.0635, 24), propMat); disc.rotation.x = -Math.PI / 2; disc.position.set(x, 0.016, z); inner.add(disc);
+      const disc = new THREE.Mesh(new THREE.CircleGeometry(0.0635, 24), propMat); disc.rotation.x = -Math.PI / 2; disc.position.set(x, 0.016, z); inner.add(disc); discs.push(disc);
       const hub = new THREE.Group(); hub.position.set(x, 0.016, z);
       for (let k = 0; k < 3; k++) { const bl = new THREE.Mesh(bladeG, carbon); bl.rotation.y = k * Math.PI * 2 / 3; bl.rotation.z = 0.1; hub.add(bl); }
       inner.add(hub); props.push(hub);
@@ -75,6 +75,16 @@
     g.traverse(o => o.layers.set(1));
     scene.add(g);
     drone = { g, props };
+    // vrai modèle (fpv-drone.glb, Sketchfab CC-BY, le même que monde-ouvert) à la place du châssis procédural
+    const d = drone, len = 0.36 * P.size;
+    import(new URL('../../assets/glb.js', location.href).href).then(async m => {
+      const f = m.fitGLB(await m.loadGLB(new URL('../../assets/models/fpv-drone.glb', location.href).href), len, 0);
+      if (drone !== d) return; // autre drone choisi pendant le chargement
+      m.purge(inner, [...props, ...discs]); // le .glb est d'un seul bloc : on garde les hélices procédurales, qui tournent
+      for (const o of [...props, ...discs]) o.position.set(Math.sign(o.position.x) * 0.105, discs.includes(o) ? -0.003 : -0.004, Math.sign(o.position.z) * 0.123); // posées sur les hélices du modèle (mesurées)
+      const wrap = new THREE.Group(); wrap.add(f); wrap.position.y = -0.25 * len;
+      wrap.traverse(o => { o.layers.set(1); if (o.isMesh) o.castShadow = true; }); g.add(wrap);
+    }).catch(e => console.warn('Drone .glb non chargé', e));
   }
 
   // ── État de session ──
@@ -318,10 +328,10 @@
       if (hv > 2) _fw.lerp(_up.set(st.vel.x, 0, st.vel.z).normalize(), Math.min(1, (hv - 2) / 6));
       if (_fw.lengthSq() < 1e-4) _fw.set(0, 0, -1);
       _fw.normalize();
-      const dist = 1.6 + 1.4 * P.size;
+      const dist = 0.9 + 0.9 * P.size; // drone de 36 cm : assez près pour le voir en détail
       // orbite souris : revient doucement derrière le drone après 1,5 s sans glisser
       if (!orb.drag) { orb.idle += dt; if (orb.idle > 1.5) { const f = Math.exp(-dt * 2.5); orb.yaw *= f; orb.pitch *= f; } }
-      const h = 0.5 + 0.5 * P.size, R = Math.hypot(dist, h);
+      const h = 0.3 + 0.3 * P.size, R = Math.hypot(dist, h);
       const a = Math.atan2(_fw.x, _fw.z) + orb.yaw, e = Math.atan2(h, dist) + orb.pitch;
       const want = _up.set(-Math.sin(a) * Math.cos(e), Math.sin(e), -Math.cos(a) * Math.cos(e)).multiplyScalar(R).add(st.pos);
       chasePos.lerp(want, 1 - Math.exp(-dt * (orb.drag ? 30 : 7)));

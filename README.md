@@ -51,11 +51,21 @@ puis allez sur http://localhost:8000 (dans le dossier `web/` de Mes Projets : ht
 
 ## Technologies
 
-HTML, CSS et JavaScript ; rendu 3D avec [Three.js](https://threejs.org/) r128 (chargé depuis un CDN). Sans étape de build.
+HTML, CSS et JavaScript ; rendu 3D avec [Three.js](https://threejs.org/) r186 (chargé depuis un CDN par `assets/three-compat.js`). Sans étape de build.
 
 ---
 
 Fait partie de [Mes Projets](https://yoannservices.github.io/) · [Portfolio](https://yoannservices.github.io/portfolio/) · par [@yoannservices](https://github.com/yoannservices)
+
+## Fiche technique
+
+Résumé de ce que fait le code, tenu à jour à chaque modification : le lire suffit pour vérifier une information sans relire tout le jeu.
+
+- **Code** : scripts classiques `js/settings.js`, `input.js`, `physics.js`, `world.js`, `targets.js` (voitures à suivre), `fx.js`, `ui.js`, `main.js`, chargés par `three-compat.js` (`data-scripts`).
+- **Drone** : `assets/models/fpv-drone.glb` (un seul maillage : hélices non séparées), `fitGLB(len = 0,36 × P.size)`, abaissé de 0,25 × len. Le châssis procédural est purgé sauf ses hélices et disques de flou, recalés sur les hélices du modèle à (±0,105 ; −0,004 ; ±0,123) (cotes mesurées) : ce sont eux qui tournent (`drone.props`, boucle principale).
+- **Voitures suivies** (`targets.js`) : `ferrari-458.glb`, `fitGLB(4.53, 0)`, roues préparées par `rigWheels` avant de retourner le modèle (`rotation.y = π`, avant du jeu sur −Z), puis `poseWheel(w, c.spin, braquage)`. Carrosserie `Material.001` teintée par voiture.
+- **Caméras (C)** : Caméra FPV ; Vue poursuite (distance 0,9 + 0,9 × taille, hauteur 0,3 + 0,3 × taille) ; Vue pilote (LOS, depuis le sol).
+- **Sauvegarde** : records `fpvsim:best`.
 
 ## Crédits des modèles 3D
 

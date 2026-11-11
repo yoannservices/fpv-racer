@@ -85,17 +85,15 @@ const Targets = (() => {
   makeCar('Huit', pEight, 0xf4f4f4, 0x1e6fe0, { v: 12.5, mode: 'eight', grip: 6 });
   makeCar('Circuit', pTrack, 0xf2c21b, 0x111111, { v: 20, vmax: 32, mode: 'track', grip: 11, s0: 40 });
 
-  // vraie Ferrari 458 (exemples three.js, par vicent091036 ; licence à vérifier)
-  import(new URL('../../assets/glb.js', location.href).href).then(m => m.loadGLB(new URL('../../assets/models/ferrari.glb', location.href).href)).then(src => {
+  // Ferrari 458 Italia 2015 (Sketchfab, Tyler_Dave, CC-BY 4.0, voir assets/models/CREDITS.md)
+  import(new URL('../../assets/glb.js', location.href).href).then(async gl => {
+    const src = await gl.loadGLB(new URL('../../assets/models/ferrari-458.glb', location.href).href);
     for (const c of cars) {
-      const m = src.clone(true), body = new THREE.Group(), wheels = [], steer = [];
-      m.traverse(o => { if (o.isMesh) { o.castShadow = true; if (o.material.name === 'Body_Color') { o.material = o.material.clone(); o.material.color.set(c.color); } } });
-      for (const [n, front] of [['wheel_fl', 1], ['wheel_fr', 1], ['wheel_rl', 0], ['wheel_rr', 0]]) {
-        const w = m.getObjectByName(n), piv = new THREE.Group(), spin = new THREE.Group();
-        piv.position.copy(w.position); w.position.set(0, 0, 0); spin.add(w); piv.add(spin); c.g.add(piv);
-        wheels.push(spin); if (front) steer.push(piv);
-      }
-      body.add(m); c.g.add(body); c.body = body; c.wheels = wheels; c.steer = steer;
+      const m = gl.fitGLB(src.clone(true), 4.53, 0), body = new THREE.Group();
+      m.traverse(o => { if (o.isMesh) { o.castShadow = true; if (o.material.name === 'Material.001') { o.material = o.material.clone(); o.material.color.set(c.color); } } }); // Material.001 : carrosserie
+      c.wheels = gl.rigWheels(m); c.pose = gl.poseWheel; // roues préparées avant de retourner le modèle (rigWheels prend l'avant sur +Z)
+      m.rotation.y = Math.PI; // avant du jeu sur -Z
+      body.add(m); c.g.add(body); c.body = body;
     }
   }).catch(e => console.warn('Ferrari non chargée', e));
 
@@ -136,8 +134,8 @@ const Targets = (() => {
       c.body.rotation.z = Math.max(-0.06, Math.min(0.06, -lat * 0.004));
       c.body.rotation.x = 0;
       c.spin += c.v / 0.34 * dt * (Math.abs(c.drift) > 0.3 ? 1.6 : 1);
-      c.wheels.forEach(w => { w.rotation.x = -c.spin; });
-      c.steer.forEach(s => { s.rotation.y = Math.max(-0.65, Math.min(0.65, -c.drift * 0.95 + k * 2.6)); });
+      const st = Math.max(-0.65, Math.min(0.65, -c.drift * 0.95 + k * 2.6));
+      c.wheels.forEach(w => c.pose(w, c.spin, st)); // modèle retourné : +spin sur son axe = roule vers l'avant du jeu
       c.center.copy(c.pos).y += 0.75;
       // collider dynamique
       _q.setFromAxisAngle(UPY, h);
