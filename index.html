@@ -8,11 +8,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Chakra+Petch:wght@500;600;700&family=VT323&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/theme.css">
-<link rel="stylesheet" href="assets/simulateur.css" />
-<script src="assets/loader.js" data-name="FPV Racer" data-preload="../../assets/models/ferrari-458.glb" data-controls="# Touches de base|Z S : gaz · Q D : lacet · flèches : tangage et roulis|C : caméra|R : reset|Échap : menu|# Touches du jeu|Espace : armer / désarmer|T : cible|H : OSD"></script>
-<script src="assets/site.js" data-project="loisirs/fpv-racer/index.html"></script>
-<script src="assets/gamepad.js" data-profile="none" data-cam="0"></script>
+<link rel="stylesheet" href="./assets/theme.css">
+<link rel="stylesheet" href="./assets/simulateur.css" />
+<script src="./assets/loader.js" data-name="FPV Racer" data-preload="../../assets/models/ferrari-458.glb" data-controls="# Touches de base|Z S : gaz · Q D : lacet · flèches : tangage et roulis|C : caméra|R : reset|Échap : menu|# Touches du jeu|Espace : armer / désarmer|T : cible|H : OSD"></script>
+<script src="./assets/site.js" data-project="loisirs/fpv-racer/index.html"></script>
+<script src="./assets/gamepad.js" data-profile="none" data-cam="0"></script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -53,15 +53,10 @@
 </div>
 
 <!-- ═══════════ Menu ═══════════ -->
-<div id="menu">
-  <div class="panel">
-    <header class="m-head">
-      <div class="brand">
-        <span class="logo" aria-hidden="true"><svg viewBox="0 0 40 40"><g fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="9" cy="9" r="6"/><circle cx="31" cy="9" r="6"/><circle cx="9" cy="31" r="6"/><circle cx="31" cy="31" r="6"/><path d="M13 13l14 14M27 13L13 27"/></g><rect x="16" y="16" width="8" height="8" rx="2" fill="currentColor"/></svg></span>
-        <div><h1>FPV SIM</h1><p>Acro réaliste · rates Betaflight · propwash · vidéo analogique</p></div>
-      </div>
-      <div class="pad-status" id="padStatus">Aucune manette</div>
-    </header>
+<div id="menu" class="hk-scrim">
+  <div class="panel hk-card">
+    <div class="hk-brief"><h1>FPV Racer</h1><p>Drone FPV en acro réaliste (rates Betaflight, propwash, vidéo analogique) : vol libre, course à checkpoints ou suivi de voitures.</p></div>
+    <header class="m-head"><div class="pad-status" id="padStatus">Aucune manette</div></header>
 
     <nav class="tabs" role="tablist">
       <button class="tab on" data-tab="fly">Vol</button>
@@ -88,7 +83,7 @@
         <button data-v="angle">Angle <small>auto-level, pour débuter au clavier</small></button>
       </div>
       <div class="m-actions">
-        <button class="go" id="goBtn">Décoller</button>
+        <button class="go hk-btn hk-primary" id="goBtn">Décoller</button>
         <span class="hint" id="goHint"></span>
       </div>
       <div data-foot></div> <!-- Réglages + commandes : assets/quality.js (GameSettings.foot) -->
@@ -178,6 +173,6 @@
 </div>
 
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js"}}</script>
-<script type="module" src="assets/three-compat.js" data-scripts="js/settings.js,js/input.js,js/physics.js,js/world.js,js/targets.js,js/fx.js,js/ui.js,js/main.js"></script>
+<script type="module" src="./assets/three-compat.js" data-scripts="js/settings.js,js/input.js,js/physics.js,js/world.js,js/targets.js,js/fx.js,js/ui.js,js/main.js"></script>
 </body>
 </html>

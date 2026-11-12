@@ -61,6 +61,7 @@ Fait partie de [Mes Projets](https://yoannservices.github.io/) · [Portfolio](ht
 
 Résumé de ce que fait le code, tenu à jour à chaque modification : le lire suffit pour vérifier une information sans relire tout le jeu.
 
+- **Menu** : bloc titre commun (`hk-brief`, carte `hk-card`, fond `hk-scrim` de `assets/game-menu.css`) posé directement dans `index.html` ; onglets, drone et mode de vol propres au jeu ; pied Réglages + commandes via `data-foot`.
 - **Code** : scripts classiques `js/settings.js`, `input.js`, `physics.js`, `world.js`, `targets.js` (voitures à suivre), `fx.js`, `ui.js`, `main.js`, chargés par `three-compat.js` (`data-scripts`).
 - **Drone** : `assets/models/fpv-drone.glb` (un seul maillage : hélices non séparées), `fitGLB(len = 0,36 × P.size)`, abaissé de 0,25 × len. Le châssis procédural est purgé sauf ses hélices et disques de flou, recalés sur les hélices du modèle à (±0,105 ; −0,004 ; ±0,123) (cotes mesurées) : ce sont eux qui tournent (`drone.props`, boucle principale).
 - **Voitures suivies** (`targets.js`) : `ferrari-458.glb`, `fitGLB(4.53, 0)`, roues préparées par `rigWheels` avant de retourner le modèle (`rotation.y = π`, avant du jeu sur −Z), puis `poseWheel(w, c.spin, braquage)`. Carrosserie `Material.001` teintée par voiture.
